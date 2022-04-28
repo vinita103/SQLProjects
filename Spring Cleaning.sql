@@ -11,10 +11,8 @@ last_worn INTEGER);
 DESCRIBE shirts;
 -- Third Step/ populating table with data
 INSERT INTO shirts(article, color,shirt_size,last_worn)
-VALUES('t-shirt','white', 'S' , 10);
-SELECT* FROM shirts;
-INSERT INTO shirts(article, color,shirt_size,last_worn)
-VALUES('t-shirt','green', 'S' , 200), 
+VALUES('t-shirt','white', 'S' , 10),
+('t-shirt','green', 'S' , 200), 
 ('polo shirt','black', 'M' , 10),
 ('tank top','blue', 'S' , 50),
 ('t-shirt','pink', 'S' , 0),
@@ -43,9 +41,8 @@ SET last_worn = 0
 WHERE last_worn = 15;
 -- Exercise 7/Update all white shirts and change size to 'XS' and color to 'off white'
 UPDATE shirts
-SET shirt_size = 'XS' and color = 'off white'
+SET shirt_size = 'XS', color = 'off white'
 WHERE color = 'white';
-DESCRIBE shirts;
 -- Exercise 8/Delete all old shirts that were last worn 200 days ago
 DELETE  FROM shirts
 WHERE last_worn = 200;
