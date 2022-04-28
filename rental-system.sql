@@ -200,3 +200,40 @@ WHERE (R.start_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 10 DAY))
 OR (R.end_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 10 DAY)) 
 OR ((R.start_date = CURDATE()) AND (R.end_date = DATE_ADD(CURDATE(), INTERVAL 10 DAY)));
 
+-- Advanced Exercise 1 / Foreign Key Test
+-- Try deleting a parent row with matching row(s) in child table(s), e.g., delete 'GA6666F' from vehicles table (ON DELETE RESTRICT).
+DELETE FROM vehicles 
+WHERE veh_reg_no = 'GA6666F';
+-- Try updating a parent row with matching row(s) in child table(s), e.g., rename 'GA6666F' to 'GA9999F' in vehicles table. Check the effects on the child table rental_records (ON UPDATE CASCADE).
+UPDATE vehicles 
+SET veh_reg_no = 'GA9999F'
+where veh_reg_no = 'GA6666F';
+SELECT * FROM vehicles;
+-- Remove 'GA6666F' from the database (Hints: Remove it from child table rental_records; then parent table vehicles.
+UPDATE vehicles 
+SET veh_reg_no = 'GA6666F'
+where veh_reg_no = 'GA9999F';
+DELETE FROM rental_records 
+WHERE veh_reg_no = 'GA6666F';
+SELECT * FROM rental_records;
+DELETE FROM vehicles
+WHERE veh_reg_no = 'GA6666F';
+SELECT * FROM vehicles;
+
+-- Advanced Exercise 2/Payments/A rental could be paid over a number of payments (e.g., deposit, installments, full payment). Each payment is for one rental. Create a new table called payments. Need to create columns to facilitate proper audit check (such as create_date, create_by, last_update_date, last_update_by, etc.)
+DROP TABLE IF EXISTS `payments`;
+CREATE TABLE payments ( 
+`payment_id` INT UNSIGNED  NOT NULL AUTO_INCREMENT ,
+`rental_id` INT UNSIGNED NOT NULL ,
+`amount` DECIMAL(8,2) NOT NULL DEFAULT 0,
+`mode` ENUM ('cash', 'check', 'credit card'),
+`type` ENUM ('deposit', 'partial', 'full') NOT NULL DEFAULT 'full',
+`create_date`  DATETIME NOT NULL,
+`create_by`   INT UNSIGNED NOT NULL,
+`last_update_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ `last_update_by`  INT UNSIGNED NOT NULL,
+ PRIMARY KEY (`payment_id`),
+ FOREIGN KEY (`rental_id`) REFERENCES rental_records(`rental_id`),
+ INDEX (`rental_id`)
+);
+DESCRIBE payments;
